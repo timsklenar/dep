@@ -39,7 +39,6 @@ echo <<<EOM
 
 	<link href="/vendor/fa/4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <link type="text/css" href="/vendor/openlayers/{$OL}/ol.css" rel="stylesheet" />
-    <link type="text/css" href="/vendor/openlayers/{$OL}/ol3-layerswitcher.css" rel="stylesheet" />
     <!-- Le styles -->
     <link type="text/css" href="/vendor/jquery-ui/1.11.4/jquery-ui.min.css" rel="stylesheet" />
     <link href="/vendor/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
@@ -133,21 +132,22 @@ echo <<<EOM
  <div class="row row-offcanvas row-offcanvas-right fill">
   <div class="col-xs-12 fill">
     <div id="map" style="width: 100%; height: 100%; position:fixed;"></div>
-    <div id="maptitle">The Map Title</div>
 	<canvas id="colorbar" width="100" height="100"></canvas>
    </div>
    <div class="col-xs-6 col-sm-3 sidebar-offcanvas" id="sidebar">
      <div class="pull-left">
-       <ul class="control-group list-unstyled">
-	     <li><a data-target="q1" href="#" class="btn btn-sq-sm btn-danger">
-              <i class="fa fa-map"></i><br/></a></li> 
-	     <li><a data-target="q2" href="#" class="btn btn-sq-sm btn-danger">
-              <i class="fa fa-bars"></i><br/></a></li> 
-	     <li><a data-target="q3" href="#" class="btn btn-sq-sm btn-danger">
-              <i class="fa fa-info-circle"></i><br/></a></li> 
-	     <li><a style="margin-top: 60px;" data-target="q4" href="#" class="btn btn-sq-sm btn-danger">
-              <i class="fa fa-wrench"></i><br/></a></li> 
-       </ul>
+        <button style="margin-top: 30px;" data-target="q1" class="btn btn-sq-sm btn-danger">
+              <i class="fa fa-map"></i></button><br />
+        <button data-target="q2" class="btn btn-sq-sm btn-danger">
+              <i class="fa fa-wrench"></i></button><br />
+        <button data-target="q3" class="btn btn-sq-sm btn-danger">
+              <i class="fa fa-info-circle"></i></button><br />
+        <button data-target="q4" class="btn btn-sq-sm btn-danger">
+              <i class="fa fa-bars"></i></button><br />
+        <button style="margin-top: 30px;" class="btn btn-sq-sm btn-danger" id="mapplus">
+              <i class="fa fa-search-plus"></i></button><br />
+        <button class="btn btn-sq-sm btn-danger" id="mapminus">
+              <i class="fa fa-search-minus"></i></button><br />
      </div><!-- ./pull-left buttons -->
     
 
@@ -221,7 +221,12 @@ echo <<<EOM
       </div><!-- ./detailsContainer -->
     </div><!-- ./q3 -->
     <div id="q4">
-    <h4>More Content Here!</h4>
+
+    <h4>Map Base Layers</h4>
+        <ul id="ls-base-layers" class="list-unstyled"></ul>
+    <h4>Map Overlay Layers</h4>
+        <ul id="ls-overlay-layers" class="list-unstyled"></ul>
+
     </div><!-- ./q4 -->
 </div><!-- ./sidebar-content -->
 
@@ -229,15 +234,20 @@ echo <<<EOM
  </div><!--/.row -->
 </div><!--/.container-fluid -->
 
+<div id="maptitlediv">
+    <div class="row">
+        <div class="col-xs-12"><span id="maptitle">DEP Map</span></div>
+    </div>
+</div>
 <div id="fdetails">
     <div class="row">
       <div class="col-xs-12 col-md-4">
         <div class="row fshaded">
-        	<div class="col-xs-2 col-md-12">HUC12: <span id="info-huc12"></span></div>
-        	<div class="col-xs-2 col-md-12">Precip: <span id="info-precip"></span></div>
-        	<div class="col-xs-2 col-md-12">Runoff: <span id="info-runoff"></span></div>
-        	<div class="col-xs-2 col-md-12">Detachment: <span id="info-loss"></span></div>
-        	<div class="col-sx-4 col-md-12">Hillslope Soil Loss: <span id="info-delivery"></span></div>
+        	<div class="col-xs-12">HUC12: <span id="info-huc12"></span></div>
+        	<div class="col-xs-6 col-md-12">Precipitation: <span class="visible-xs-inline"><br></span><span id="info-precip"></span></div>
+        	<div class="col-xs-6 col-md-12">Water Runoff: <span class="visible-xs-inline"><br></span><span id="info-runoff"></span></div>
+        	<div class="col-xs-6 col-md-12">Soil Detachment: <span class="visible-xs-inline"><br></span><span id="info-loss"></span></div>
+        	<div class="col-xs-6 col-md-12">Hillslope Soil Loss: <span class="visible-xs-inline"><br></span><span id="info-delivery"></span></div>
         </div><!-- ./inner row container -->
        </div><!-- ./column container -->
     </div><!-- ./outer row container -->
@@ -251,7 +261,6 @@ echo <<<EOM
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <script src="/vendor/bootstrap/3.3.7/js/ie10-viewport-bug-workaround.js"></script>
  	<script src='/vendor/openlayers/{$OL}/ol.js'></script>
- 	<script src='/vendor/openlayers/{$OL}/ol3-layerswitcher.js'></script>
 
         <script type="text/javascript">
 var tilecache = "{$TMS_SERVER}";

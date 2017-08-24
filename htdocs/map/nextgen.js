@@ -356,10 +356,11 @@ function zoom_iowa(){
     map.zoomToExtent(iaextent);
 }
 
-function make_iem_tms(title, layername, visible){
+function make_iem_tms(title, layername, visible, type){
 	return new ol.layer.Tile({
 		title : title,
 		visible: visible,
+		type: type,
 		source : new ol.source.XYZ({
 			url : tilecache +'/c/tile.py/1.0.0/'+layername+'/{z}/{x}/{y}.png'
 		})
@@ -516,6 +517,47 @@ function drawColorbar(){
 
 }
 
+function layerVisible(lyr, visible){
+    lyr.setVisible(visible);
+    if (visible && lyr.get('type') === 'base') {
+        // Hide all other base layers regardless of grouping
+    	$.each(map.getLayers().getArray(), function(i, l) {
+            if (l != lyr && l.get('type') === 'base') {
+                l.setVisible(false);
+            }
+        });
+    }
+
+}
+function makeLayerSwitcher(){
+	var base_elem = $("#ls-base-layers")[0];
+	var over_elem = $("#ls-overlay-layers")[0];
+	$.each(map.getLayers().getArray(), function(i, lyr){
+		var lyrTitle = lyr.get('title');
+		var li = document.createElement('li');
+		var input = document.createElement('input');
+		var span = document.createElement('span');
+		if (lyr.get('type') === 'base') {
+            input.type = 'radio';
+            input.name = 'base';
+        } else {
+            input.type = 'checkbox';
+        }
+        input.checked = lyr.get('visible');
+        input.onchange = function(e) {
+            layerVisible(lyr, e.target.checked);
+        };
+        span.innerHTML = lyrTitle;
+        li.appendChild(input);
+        li.appendChild(span);        
+		if (lyr.get('type') === 'base') {
+            base_elem.appendChild(li);
+        } else {
+            over_elem.appendChild(li);
+        }
+
+	});
+}
 function displayFeatureInfo(evt) {
 
       var features = map.getFeaturesAtPixel(map.getEventPixel(evt.originalEvent));
@@ -626,31 +668,28 @@ $(document).ready(function(){
 	// Create map instance
     map = new ol.Map({
         target: 'map',
-        controls: [new ol.control.Zoom(),
-            new ol.control.ZoomToExtent({
-            	//map.getView().calculateExtent(map.getSize())
-            	extent: [-10889524, 4833877, -9972280, 5488178]
-            })
-        ],
+        controls: [],
         layers: [new ol.layer.Tile({
             	title: 'OpenStreetMap',
             	visible: true,
+            	type: 'base',
         		source: new ol.source.OSM()
         	}),
         	new ol.layer.Tile({
                 title: "Global Imagery",
                 visible: false,
+                type: 'base',
                 source: new ol.source.TileWMS({
                         url: 'http://maps.opengeo.org/geowebcache/service/wms',
                         params: {LAYERS: 'bluemarble', VERSION: '1.1.1'}
                 })
         	}),
-        	make_iem_tms('Iowa 100m Hillshade', 'iahshd-900913', false),
+        	make_iem_tms('Iowa 100m Hillshade', 'iahshd-900913', false, 'base'),
         	vectorLayer,
-        	make_iem_tms('US Counties', 'c-900913', false),
-        	make_iem_tms('US States', 's-900913', true),
-        	make_iem_tms('Hydrology', 'iahydrology-900913', false),
-        	make_iem_tms('HUC 8', 'huc8-900913', false)
+        	make_iem_tms('US Counties', 'c-900913', false, ''),
+        	make_iem_tms('US States', 's-900913', true, ''),
+        	make_iem_tms('Hydrology', 'iahydrology-900913', false, ''),
+        	make_iem_tms('HUC 8', 'huc8-900913', false, '')
         ],
         view: new ol.View({
         	enableRotation: false,
@@ -736,11 +775,7 @@ $(document).ready(function(){
     		alert("No features found for where you double clicked on the map.");
     	}
     });
-    
-    // Create a LayerSwitcher instance and add it to the map
-    var layerSwitcher = new ol.control.LayerSwitcher();
-    map.addControl(layerSwitcher);
-    
+        
     $("#datepicker").datepicker({
     	changeMonth: true,
     	changeYear: true,
@@ -884,14 +919,19 @@ $(document).ready(function(){
     	$(this).blur();
     });
     
+    $("#mapplus").click(function(){
+    	map.getView().setZoom(map.getView().getZoom() + 1);
+    });
+    $("#mapminus").click(function(){
+    	map.getView().setZoom(map.getView().getZoom() - 1);
+    });
     
     remap();
-    // Make the map 6x4
-    //sz = map.getSize();
-    //map.setSize([sz[0], sz[0] / 6. * 4.]);
+
     drawColorbar();
     
     checkDates();
     window.setInterval(checkDates, 600000);
+    makeLayerSwitcher();
     
 }); // End of document.ready()
