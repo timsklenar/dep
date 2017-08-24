@@ -12,7 +12,6 @@ var clickOverlayLayer;
 var defaultCenter = ol.proj.transform([-94.5, 42.1], 'EPSG:4326', 'EPSG:3857');
 var defaultZoom = 6;
 var popup;
-var IDLE = "Idle";
 
 var varnames = ['qc_precip', 'avg_runoff', 'avg_loss', 'avg_delivery'];
 // How to get english units to metric, when appstate.metric == 1
@@ -100,19 +99,17 @@ function makeDate(year, month, day){
 }
 // Update the status box on the page with the given text
 function setStatus(text){
-	$('#status').html(text);
+	$.toaster({ message : text, priority : 'info' });
 }
 
 // Check the server for updated run information
 function checkDates(){
-	setStatus("Checking for new data.");
 	$.ajax({
 		url: '/geojson/timedomain.py?scenario=0',
 		fail: function(jqXHR, textStatus){
 			setStatus("New data check failed "+ textStatus);
 		},
 		success: function(data){
-			setStatus(IDLE);
 			if (data['last_date']){
 				// Avoid ISO -> Badness
 				var s = data['last_date'];
@@ -247,7 +244,6 @@ function updateDetails(huc12){
 	$('#details_hidden').css('display', 'none');
 	$('#details_details').css('display', 'none');
 	$('#details_loading').css('display', 'block');
-	setStatus("Loading detailed information for HUC12: "+ huc12);
     $.get('nextgen-details.php', {
     	huc12: huc12,
 		date: formatDate("yy-mm-dd", appstate.date),
@@ -257,7 +253,6 @@ function updateDetails(huc12){
 			$('#details_details').css('display', 'block');
 			$('#details_loading').css('display', 'none');
 			$('#details_details').html(data);
-			setStatus(IDLE);
 	});
 
 }
@@ -314,7 +309,6 @@ function remap(){
 				updateDetails(detailedFeature.getId());
 			}
 			drawColorbar();
-			setStatus(IDLE);
 		}
 	});
 	setTitle();
@@ -534,6 +528,7 @@ function makeLayerSwitcher(){
 	var over_elem = $("#ls-overlay-layers")[0];
 	$.each(map.getLayers().getArray(), function(i, lyr){
 		var lyrTitle = lyr.get('title');
+		if (lyrTitle === undefined) return;
 		var li = document.createElement('li');
 		var input = document.createElement('input');
 		var span = document.createElement('span');
@@ -772,7 +767,7 @@ $(document).ready(function(){
     	if (features){
         	makeDetailedFeature(features[0]);
     	} else {
-    		alert("No features found for where you double clicked on the map.");
+    		setStatus("No features found for where you double clicked on the map.");
     	}
     });
         

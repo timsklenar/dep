@@ -163,7 +163,6 @@ echo <<<EOM
 		<button id="mn" class="btn btn-default" type="button"><i class="fa fa-search-plus"></i> Minnesota</button>
 		<button id="ne" class="btn btn-default" type="button"><i class="fa fa-search-plus"></i> Nebraska</button>
 		<br clear="all" />
-		<strong>Status:</strong> <span id="status">Idle</span>
     	
     	<div id="units_radio">
 		  <input type="radio" id="english_opt" name="units" value="0" checked="checked"><label for="english_opt">English</label>
@@ -261,6 +260,7 @@ echo <<<EOM
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <script src="/vendor/bootstrap/3.3.7/js/ie10-viewport-bug-workaround.js"></script>
  	<script src='/vendor/openlayers/{$OL}/ol.js'></script>
+ 	<script src='/vendor/jquery-toaster/1.2.0/jquery.toaster.js'></script>
 
         <script type="text/javascript">
 var tilecache = "{$TMS_SERVER}";
