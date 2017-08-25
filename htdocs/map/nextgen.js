@@ -70,13 +70,15 @@ var vartitle = {
 };
 
 var currentTab = null;
-function handleClick(target){	
+function handleClick(target){
+	$("#buttontabs .btn").removeClass('active');
 	for (i=1;i<5;i++){
 		$('#q'+i).hide();
 	}
 	$('#q'+target).show();
 	// 1. If no currentTab, show the offcanvas
 	if ( currentTab == null){		
+		$("#btnq"+target).toggleClass('active');
 		$('.row-offcanvas').toggleClass("active");
 		currentTab = target;
 	}
@@ -85,6 +87,7 @@ function handleClick(target){
 		$('.row-offcanvas').toggleClass("active");
 		currentTab = null;
 	} else {
+		$("#btnq"+target).toggleClass('active');
 		currentTab = target;
 	}
 }

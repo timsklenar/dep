@@ -36,13 +36,13 @@ float: left;
   
     .row-offcanvas-right
   .sidebar-offcanvas {
-    right: -248px; /* 6 columns */
+    right: -248px; 
   }
   
     .row-offcanvas-right.active
   .sidebar-offcanvas
    {
-    right: 0px; /* 6 columns */
+    right: 0px; 
   }
   
     .sidebar-offcanvas {
@@ -97,7 +97,9 @@ float: left;
   font-size: 2em !important;
   z-index: 1003;
 }
-
+.btn-danger.active{
+     background: rgba(0, 0, 0, 0.8) !important;
+ }
 #colorbar {
 	position: absolute;
 	left: 0px;

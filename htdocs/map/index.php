@@ -135,14 +135,14 @@ echo <<<EOM
 	<canvas id="colorbar" width="100" height="100"></canvas>
    </div>
    <div class="col-xs-6 col-sm-3 sidebar-offcanvas" id="sidebar">
-     <div class="pull-left">
-        <button style="margin-top: 30px;" data-target="q1" class="btn btn-sq-sm btn-danger">
+     <div class="pull-left" id="buttontabs">
+        <button id="btnq1" style="margin-top: 30px;" data-target="q1" class="btn btn-sq-sm btn-danger">
               <i class="fa fa-map"></i></button><br />
-        <button data-target="q2" class="btn btn-sq-sm btn-danger">
+        <button id="btnq2" data-target="q2" class="btn btn-sq-sm btn-danger">
               <i class="fa fa-wrench"></i></button><br />
-        <button data-target="q3" class="btn btn-sq-sm btn-danger">
+        <button id="btnq3" data-target="q3" class="btn btn-sq-sm btn-danger">
               <i class="fa fa-info-circle"></i></button><br />
-        <button data-target="q4" class="btn btn-sq-sm btn-danger">
+        <button id="btnq4" data-target="q4" class="btn btn-sq-sm btn-danger">
               <i class="fa fa-bars"></i></button><br />
         <button style="margin-top: 30px;" class="btn btn-sq-sm btn-danger" id="mapplus">
               <i class="fa fa-search-plus"></i></button><br />
@@ -157,28 +157,31 @@ echo <<<EOM
  	  </div>
  	  <div class="clearfix"></div>
  
-    <div id="q1">
-    	<button id="ia" class="btn btn-default" type="button"><i class="fa fa-search-plus"></i> Iowa</button>
-		<button id="ks" class="btn btn-default" type="button"><i class="fa fa-search-plus"></i> Kansas</button>
-		<button id="mn" class="btn btn-default" type="button"><i class="fa fa-search-plus"></i> Minnesota</button>
-		<button id="ne" class="btn btn-default" type="button"><i class="fa fa-search-plus"></i> Nebraska</button>
-		<br clear="all" />
-    	
-    	<div id="units_radio">
-		  <input type="radio" id="english_opt" name="units" value="0" checked="checked"><label for="english_opt">English</label>
-		  <input type="radio" id="metric_opt" name="units" value="1"><label for="metric_opt">Metric</label>
-		</div>
-
+    <div id="q1">  
+        <h4>What to View:</h4>
 		<div id="radio">
 		  <input type="radio" id="precip-in2_opt" name="whichlayer" value="qc_precip" checked="checked"><label for="precip-in2_opt">Precipitation</label>
 		  <br /><input type="radio" id="runoff2_opt" name="whichlayer" value="avg_runoff"><label for="runoff2_opt">Runoff</label>
 		  <br /><input type="radio" id="loss2_opt" name="whichlayer" value="avg_loss"><label for="loss2_opt">Detachment</label>
 		  <br /><input type="radio" id="delivery2_opt" name="whichlayer" value="avg_delivery"><label for="delivery2_opt">Hillslope Soil Loss</label>
 		</div>
-    	
-    	<div id="variable_desc"></div>
-    
+
+    	<div id="variable_desc" class="well"></div>
+
+        <h4>Time Display Options:</h4>
+    	<div id="units_radio">
+		  <input type="radio" id="english_opt" name="units" value="0" checked="checked"><label for="english_opt">English</label>
+		  <input type="radio" id="metric_opt" name="units" value="1"><label for="metric_opt">Metric</label>
+		</div>
+
+        <h4>Preset Map Views:</h4>
+    	<button id="ia" class="btn btn-default" type="button"><i class="fa fa-search-plus"></i> Iowa</button>
+		<button id="ks" class="btn btn-default" type="button"><i class="fa fa-search-plus"></i> Kansas</button>
+		<button id="mn" class="btn btn-default" type="button"><i class="fa fa-search-plus"></i> Minnesota</button>
+		<button id="ne" class="btn btn-default" type="button"><i class="fa fa-search-plus"></i> Nebraska</button>
+		<br clear="all" />    
     </div><!-- ./q1 -->
+
     <div id="q2">
     	<h4>Days to Display</h4>
 			<div id="t">
